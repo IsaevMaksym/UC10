@@ -1,0 +1,232 @@
+Create .net simple app that will accepts the string, validate it with regular expressions and return the Boolean matching result. The regular expression should validate the maximum string length, validate that the string contains at least one uppercase letter, one lowercase letter, one digit, and one special character from a predefined list: !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~. 
+ChatGPT
+Sure, here's a simple C# .NET console application that accepts a string input, validates it using a regular expression (regex), and returns a boolean result.
+
+csharp
+Copy code
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Please enter your string:");
+        string userInput = Console.ReadLine();
+
+        if (IsValid(userInput))
+        {
+            Console.WriteLine("Your string is valid.");
+        }
+        else
+        {
+            Console.WriteLine("Your string is invalid.");
+        }
+
+        Console.ReadLine();
+    }
+
+    public static bool IsValid(string input)
+    {
+        // Limit the string length to 100 characters. If you want to change this limit, modify the number.
+        if (input.Length > 100)
+            return false;
+
+        // Define the regular expression that validates the string requirements.
+        string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[A-Za-z\d!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~]{1,100}$";
+
+        Regex regex = new Regex(pattern);
+        return regex.IsMatch(input);
+    }
+}
+This program prompts the user to enter a string. It then checks whether the string is valid according to the specified conditions by calling the IsValid method. The IsValid method first checks if the string is longer than 100 characters, returning false if so. It then checks if the string matches a regex pattern that requires at least one lowercase letter, one uppercase letter, one digit, and one special character from the specified set. If the string matches the pattern, IsValid returns true; otherwise, it returns false.
+
+Note: This application will exit immediately if you run it outside of a console. If you want to see the results, you should run it in a console or add Console.ReadLine(); at the end to keep it open.
+
+
+
+
+
+User
+can you change the validation of string length by adding it to regular expression and number of string length will be passed as parameter
+ChatGPT
+Sure! Here's how you can modify the program to add string length validation directly to the regular expression and have it passed as a parameter.
+
+csharp
+Copy code
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Please enter your string:");
+        string userInput = Console.ReadLine();
+
+        Console.WriteLine("Please enter the maximum allowed string length:");
+        int maxLength = Int32.Parse(Console.ReadLine());
+
+        if (IsValid(userInput, maxLength))
+        {
+            Console.WriteLine("Your string is valid.");
+        }
+        else
+        {
+            Console.WriteLine("Your string is invalid.");
+        }
+
+        Console.ReadLine();
+    }
+
+    public static bool IsValid(string input, int maxLength)
+    {
+        // Define the regular expression that validates the string requirements.
+        string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[A-Za-z\d!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~]{1," + maxLength + "}$";
+
+        Regex regex = new Regex(pattern);
+        return regex.IsMatch(input);
+    }
+}
+In this updated program, the user is prompted to enter both a string and the maximum allowed string length. The IsValid method now takes two parameters: the user's input string and the maximum string length. The regex pattern is created dynamically using string concatenation to include the user's specified maximum string length.
+
+Please remember to handle the exception if the user enters non-integer value for maximum length. I kept it simple here for demonstration purposes.
+
+
+
+
+
+User
+can you make it in the loop while user don't press escape button 
+ChatGPT
+
+2 / 2
+
+Certainly! Here's the modified version of the program that continues to accept and validate input until the user presses the Escape key.
+
+csharp
+Copy code
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Press Escape to exit at any time.");
+
+        while (true)
+        {
+            Console.WriteLine("Please enter your string:");
+            string userInput = Console.ReadLine();
+
+            // Check if the user pressed Escape
+            if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape)
+            {
+                break;
+            }
+
+            Console.WriteLine("Please enter the maximum allowed string length:");
+            string maxLengthString = Console.ReadLine();
+            
+            // Check if the user pressed Escape
+            if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape)
+            {
+                break;
+            }
+
+            int maxLength;
+            if (!int.TryParse(maxLengthString, out maxLength))
+            {
+                Console.WriteLine("Please enter a valid number for maximum string length.");
+                continue;
+            }
+
+            if (IsValid(userInput, maxLength))
+            {
+                Console.WriteLine("Your string is valid.");
+            }
+            else
+            {
+                Console.WriteLine("Your string is invalid.");
+            }
+        }
+    }
+
+    public static bool IsValid(string input, int maxLength)
+    {
+        // Define the regular expression that validates the string requirements.
+        string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[A-Za-z\d!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~]{1," + maxLength + "}$";
+
+        Regex regex = new Regex(pattern);
+        return regex.IsMatch(input);
+    }
+}
+Please note that there's a slight change in how we check for the Escape key press. The Console.KeyAvailable and Console.ReadKey(true).Key checks are used. The loop will continue to ask the user for input and validate it until the user presses the Escape key.
+
+
+
+
+
+User
+it not working please change do while loop
+ChatGPT
+
+3 / 3
+
+I apologize for the confusion. Here is the revised version of the program using a do-while loop. In this version, the user is first prompted for input, and then the program checks if the user wants to quit (by pressing 'q' or 'Q') after each input is entered. If the user wants to quit, the loop breaks.
+
+csharp
+Copy code
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string userInput, maxLengthString;
+        int maxLength;
+
+        do
+        {
+            Console.WriteLine("Please enter your string or 'q' to quit:");
+            userInput = Console.ReadLine();
+
+            // Check if the user wants to quit
+            if (userInput.ToLower() == "q") break;
+
+            Console.WriteLine("Please enter the maximum allowed string length or 'q' to quit:");
+            maxLengthString = Console.ReadLine();
+
+            // Check if the user wants to quit
+            if (maxLengthString.ToLower() == "q") break;
+
+            if (!int.TryParse(maxLengthString, out maxLength))
+            {
+                Console.WriteLine("Please enter a valid number for maximum string length.");
+                continue;
+            }
+
+            if (IsValid(userInput, maxLength))
+            {
+                Console.WriteLine("Your string is valid.");
+            }
+            else
+            {
+                Console.WriteLine("Your string is invalid.");
+            }
+
+        } while (true);
+    }
+
+    public static bool IsValid(string input, int maxLength)
+    {
+        // Define the regular expression that validates the string requirements.
+        string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[A-Za-z\d!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~]{1," + maxLength + "}$";
+
+        Regex regex = new Regex(pattern);
+        return regex.IsMatch(input);
+    }
+}
+In this version, the user can quit the program by entering 'q' or 'Q' when prompted to enter a string or the maximum allowed string length.
