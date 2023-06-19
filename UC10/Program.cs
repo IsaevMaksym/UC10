@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using UC10.Interfaces;
+using UC10.Services;
 
 class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
+
+        IValidationService? _validationService = new ValidationService();
+
         Console.WriteLine("Please enter your string:");
         string userInput = Console.ReadLine();
 
         Console.WriteLine("Please enter the maximum allowed string length:");
         var isNumberValid = Int32.TryParse(Console.ReadLine(), out int maxLength);
 
-        if (isNumberValid && IsValid(userInput, maxLength))
+        if (isNumberValid && _validationService.IsValid(userInput, maxLength))
         {
             Console.WriteLine("Your string is valid.");
         }
@@ -21,14 +26,5 @@ class Program
         }
 
         Console.ReadLine();
-    }
-
-    public static bool IsValid(string input, int maxLength)
-    {
-        // Define the regular expression that validates the string requirements.
-        string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[A-Za-z\d!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~]{1," + maxLength + "}$";
-
-        Regex regex = new Regex(pattern);
-        return regex.IsMatch(input);
     }
 }
